@@ -19,74 +19,33 @@ import Wholesaler from "../images/Wholesaler.jpg";
 import SignIn from "../login/SignIn";
 import { BrowserRouter as Router, NavLink } from "react-router-dom";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root1: {
-    maxWidth: 350,
-    marginLeft: 30,
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  root2: {
-    marginTop: 10,
-    marginBottom: 10,
-    maxWidth: 350,
-    marginLeft: 30,
-  },
-  root3: {
-    marginTop: 10,
-    marginBottom: 10,
-    maxWidth: 350,
-    marginLeft: 30,
-  },
-  root4: {
-    marginBottom: 10,
-    maxWidth: 350,
-    marginLeft: 30,
-  },
-  root5: {
-    marginBottom: 10,
-    maxWidth: 350,
-    marginLeft: 30,
-  },
-  root6: {
-    marginBottom: 10,
-    maxWidth: 350,
-    marginLeft: 30,
+    display: "flex",
+    alignItems: "center",
+    margin: theme.spacing(3),
+
   },
   media: {
-    height: 280,
+    height: 100,
     paddingLeft: 20,
   },
-});
+}));
 
-const handleClick = () => {
-  return (
-    <div>
-      <SignIn />
-    </div>
-  );
-};
+
 function Cards() {
   const classes = useStyles();
 
   return (
-    <Router>
-      <Grid container>
-        <Grid item md={4}>
-          <Card className={classes.root1}>
+    <Router  >
+      <Grid className={classes.root1} >
+      <Grid item md={3} style={{ margin: "5px" }}>
+          <Card >
             <CardActionArea>
-              <CardMedia
-                className={classes.media}
-                image={Owner}
-                title="Owner"
-              />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Owner{" "}
                 </Typography>
-                {/* <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica
-              </Typography> */}
               </CardContent>
             </CardActionArea>
             <CardActions>
@@ -98,14 +57,9 @@ function Cards() {
           </Card>
         </Grid>
 
-        <Grid item md={4}>
-          <Card className={classes.root2}>
+        <Grid item md={3} style={{ margin: "5px" }}>
+          <Card >
             <CardActionArea>
-              <CardMedia
-                className={classes.media}
-                image={Supplier}
-                title="Supplier"
-              />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Supplier
@@ -120,14 +74,9 @@ function Cards() {
           </Card>
         </Grid>
 
-        <Grid item md={4}>
-          <Card className={classes.root3}>
+        <Grid item md={3} style={{ margin: "5px" }}>
+          <Card >
             <CardActionArea>
-              <CardMedia
-                className={classes.media}
-                image={Transporter}
-                title="Transporter"
-              />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Transporter
@@ -141,16 +90,9 @@ function Cards() {
             </CardActions>
           </Card>
         </Grid>
-
-        <br />
-        <Grid item md={4}>
-          <Card className={classes.root4}>
+        <Grid item md={3} style={{ margin: "5px" }}>
+          <Card >
             <CardActionArea>
-              <CardMedia
-                className={classes.media}
-                image={Manufacturer}
-                title="Manufacturer"
-              />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Manufacturer
@@ -164,15 +106,12 @@ function Cards() {
             </CardActions>
           </Card>
         </Grid>
-
-        <Grid item md={4}>
-          <Card className={classes.root5}>
+       
+      </Grid>
+      <Grid className={classes.root1}>
+      <Grid item md={3} style={{ margin: "5px" }}>
+          <Card >
             <CardActionArea>
-              <CardMedia
-                className={classes.media}
-                image={Wholesaler}
-                title="Wholesaler"
-              />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Wholesaler
@@ -187,14 +126,10 @@ function Cards() {
           </Card>
         </Grid>
 
-        <Grid item md={4}>
-          <Card className={classes.root6}>
+        <Grid item md={3} style={{ margin: "5px" }}>
+          <Card >
             <CardActionArea>
-              <CardMedia
-                className={classes.media}
-                image={Distributer}
-                title="Distributor"
-              />
+
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                   Distributor
@@ -209,16 +144,11 @@ function Cards() {
           </Card>
         </Grid>
 
-        <Grid item md={4}>
-          <Card className={classes.root6}>
+        <Grid item md={3} style={{ margin: "5px" }}>
+          <Card >
             <CardActionArea>
-              <CardMedia
-                className={classes.media}
-                image={Supplier}
-                title="Customer"
-              />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h2" href="/customer" size="small" color="primary">
                   Customer
                 </Typography>
               </CardContent>

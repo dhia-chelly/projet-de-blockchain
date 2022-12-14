@@ -33,11 +33,18 @@ class User {
     const list = snapshot.docs.map((doc)=>(doc.data()));
     return list
   }
-  async getByRole() {
-    let snapshot = await db.collection("users").where('role', '==', '1').get();
+  async getByRole(r) {
+    let snapshot = await db.collection("users").where('role', '==', r).get();
+    const list = snapshot.docs.map((doc)=>(doc.data()));
+    return list
+  }
+  async getUsersByAdr(adr) {
+    
+    let snapshot =  await db.collection("users").where('address', '==', adr).get();
     const list = snapshot.docs.map((doc)=>(doc.data()));
     return list
   }
 }
+
 
 export default User;

@@ -16,6 +16,7 @@
         "bootstrap": "^4.6.0",
         "chartist": "0.10.1",
         "classnames": "2.2.6",
+        "file-saver": "^2.0.5",
         "google-maps": "^4.3.3",
         "history": "4.10.1",
         "maps": "^0.3.3",

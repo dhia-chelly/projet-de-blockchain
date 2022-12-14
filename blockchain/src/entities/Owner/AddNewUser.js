@@ -9,12 +9,25 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseLine";
+
+import axios from "axios";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from '@material-ui/core/FormControl';
+
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
-      width: "40ch",
+      width: "80ch",
     },
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
   paper: {
     marginTop: theme.spacing(8),
@@ -24,22 +37,18 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3,1, 2),
   },
 }));
-
 function AddNewUser(props) {
-  console.log("Its working");
-  console.log(props);
-  console.log(props.account);
-  console.log("Try");
+
   const classes = useStyles();
   const [account] = useState(props.account);
   const [web3, setWeb3] = useState(props.web3);
@@ -51,9 +60,12 @@ function AddNewUser(props) {
   const [address, setAddress] = useState("");
   const [loading, isLoading] = useState(false);
 
+  const handleChange = (event) => {
+    setRole(event.target.value);
+  };
+
   console.log([account]);
-  console.log("Check?");
-  console.log([supplyChain]);
+
   const handleInputChange = (e) => {
     if (e.target.id === "name") {
       setName(e.target.value);
@@ -69,8 +81,6 @@ function AddNewUser(props) {
       let pos = JSON.parse(localStorage.getItem("currentpos"));
       pos.lng = Number(e.target.value.replaceAll(" ", ""));
       localStorage.setItem("currentpos", JSON.stringify(pos));
-    } else if (e.target.id === "role") {
-      setRole(e.target.value);
     } else if (e.target.id === "address") {
       setAddress(e.target.value);
     }
@@ -79,14 +89,22 @@ function AddNewUser(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     isLoading(true);
+    const RObject = {
+      name: name,
+      locationx: locationx,
+      locationy: locationy,
+      role: role,
+      address: address,
+    };
     var n = web3.utils.padRight(web3.utils.fromAscii(name), 64);
     var loc = [String(locationx), String(locationy)];
     supplyChain.methods
       .registerUser(n, loc, Number(role), address)
       .send({ from: account })
       .once("receipt", (receipt) => {
-        console.log(receipt);
-        isLoading(false);
+        axios.post("http://localhost:3001/api/user/save-details", RObject);
+
+       isLoading(false);
       });
   };
 
@@ -124,7 +142,7 @@ function AddNewUser(props) {
             id="locationx"
             label="Locationx"
             variant="outlined"
-            value={JSON.parse(localStorage.getItem("pos")).lat}
+            value={JSON.parse(localStorage.getItem("currentpos")).lat}
             onChange={handleInputChange}
           />
           <br></br>
@@ -132,16 +150,27 @@ function AddNewUser(props) {
             id="locationy"
             label="Locationy"
             variant="outlined"
-            value={JSON.parse(localStorage.getItem("pos")).lng}
+            value={JSON.parse(localStorage.getItem("currentpos")).lng}
             onChange={handleInputChange}
           />
           <br></br>
-          <TextField
+          <FormControl variant="outlined" className={classes.formControl}>
+
+          <InputLabel id="demo-simple-select-outlined-label">Role</InputLabel>
+          <Select
             id="role"
             label="Role"
+            onChange={handleChange}
             variant="outlined"
-            onChange={handleInputChange}
-          />
+          >
+            <MenuItem value={"1"}>supplier</MenuItem>
+            <MenuItem value={"2"}>transporter</MenuItem>
+            <MenuItem value={"3"}>manufacturer</MenuItem>
+            <MenuItem value={"4"}>wholesaler</MenuItem>
+            <MenuItem value={"5"}>distributor</MenuItem>
+            <MenuItem value={"6"}>customer</MenuItem>
+          </Select>
+          </FormControl>
           <br></br>
           <TextField
             id="address"

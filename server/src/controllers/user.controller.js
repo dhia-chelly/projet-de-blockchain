@@ -25,9 +25,18 @@ export const getUsers = async (req, res) => {
 }
 export const getUsersByRole = async (req, res) => {
     let user = new User();
-    let returnValues = await user.getByRole();
+    let returnValues = await user.getByRole(req.params.role);
     res.send(returnValues)
 
 
 }
+
+export const getUsersByAdr = async (req, res) => {
+    let user = new User();
+    let returnValues = await user.getUsersByAdr(req.body.adr);
+    res.send(returnValues)
+
+
+}
+
 

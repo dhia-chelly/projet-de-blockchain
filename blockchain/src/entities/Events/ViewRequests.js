@@ -9,6 +9,7 @@ import styles from "../../main_dashboard/assets/jss/material-dashboard-react/com
 import CardBody from '../../main_dashboard/components/Card/CardBody';
 import CardHeader from '../../main_dashboard/components/Card/CardHeader';
 import Card from '../../main_dashboard/components/Card/Card';
+import axios from "axios";
 
 const useStyles = makeStyles(styles);
 
@@ -21,12 +22,16 @@ export default function ViewRequests(props) {
   const [ details, setDetails ] = useState({});
   const [ loading, isLoading ] = useState(true);
 
-  async function verifySignature(buyerAddress, signature) {
+  async function verifySignature(buyerAddress, sellerAddress,signature,packageAddr) {
+    console.log(signature)
     let v = '0x' + signature.slice(130, 132).toString();
     let r = signature.slice(0, 66).toString();
     let s = '0x' + signature.slice(66, 130).toString();
     let messageHash = web3.eth.accounts.hashMessage(address);
+    console.log(messageHash)
     let verificationOutput = await supplyChain.methods.verify(buyerAddress, messageHash, v, r, s).call({ from: account });
+    console.log(verificationOutput)
+
     if (verificationOutput) {
       alert('Buyer is verified successfully!');
       signature = prompt('Enter signature');
@@ -37,6 +42,15 @@ export default function ViewRequests(props) {
       if (role === "1") {
         const rawMaterial = new web3.eth.Contract(RawMaterial.abi, address);
         rawMaterial.methods.updateManufacturerAddress(buyerAddress).send({ from: account });
+        ///change-manif
+        await axios.post(
+          "http://localhost:3001/api/raw-material/change-status",
+          { status: "S_res", adrRM: packageAddr }
+        );
+        await axios.post(
+          "http://localhost:3001/api/raw-material/change-manif",
+          {  adrRM: packageAddr, adrM: buyerAddress }
+        );
         alert('Response sent to manufacturer');
       } else if (role === "3") {
         const medicine = new web3.eth.Contract(Medicine.abi, address);
@@ -73,7 +87,7 @@ export default function ViewRequests(props) {
           <TableCell multiline className={classes.tableCell} style={{ maxWidth: "50px" }}>{data.returnValues[ 2 ]}</TableCell>
           <TableCell multiline className={classes.tableCell} style={{ maxWidth: "20px" }}>{data.returnValues[ 3 ]}</TableCell>
           <TableCell multiline className={classes.tableCell} style={{ maxWidth: "20px" }}>{new Date(data.returnValues[ 4 ] * 1000).toString()}</TableCell>
-          <TableCell multiline className={classes.tableCell} style={{ maxWidth: "40px" }}><Button variant="contained" color="secondary" onClick={() => verifySignature(data.returnValues[ 0 ], data.returnValues[ 3 ])}>Verify Signature</Button></TableCell>
+          <TableCell multiline className={classes.tableCell} style={{ maxWidth: "40px" }}><Button variant="contained" color="secondary" onClick={() => verifySignature(data.returnValues[ 0 ],data.returnValues[ 1 ], data.returnValues[ 3 ],data.returnValues[ 2 ])}>Verify Signature</Button></TableCell>
         </TableRow>
       )
     });

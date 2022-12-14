@@ -4,12 +4,33 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {NavLink, withRouter, BrowserRouter as Router, Route} from 'react-router-dom';
-import RawMaterial from '../../build/RawMaterial.json';
-import Transactions from '../../build/Transactions.json';
-
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Icon from '@material-ui/core/Icon';
+import axios from "axios";
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: '#1565c0',
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -35,33 +56,87 @@ export default function HandlePackage(props) {
   const [web3, setWeb3] = useState(props.web3);
   const [supplyChain] = useState(props.supplyChain);
   const [loading, isLoading] = useState(false);
-  const [pAddress, setpAddress] = useState("");
-  const [type, setType] = useState("");
-  const [cid, setCid] = useState("");
+  let [pAddress, setpAddress] = useState("");
+  let [type, setType] = useState("");
+  let [cid, setCid] = useState("");
+  const [dwa, setDwa] = useState([]);
 
   const classes = useStyles();
 
-  const handleInputChange = (e) => {
-    if (e.target.id === 'pAddress') {
-        setpAddress(e.target.value);     
-    } else if(e.target.id === 'type') {
-        setType(e.target.value);     
-    } else if(e.target.id === 'cid') {
-        setCid(e.target.value);
-    }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  function transport(data) {
     isLoading(true);
-    supplyChain.methods.transporterHandlePackage(pAddress, type, cid).send({from: account})
-    .once('receipt', async (receipt) => {
-      console.log(receipt);
-      isLoading(false);
-    })
+
+    if(data.status == "S_T"){
+      pAddress = data.rawMaterialAddress
+      cid = data.rawMaterialAddress
+      type = 1
+    }
+    console.log(pAddress)
+    console.log( type)
+    console.log( cid)
+        supplyChain.methods.transporterHandlePackage(pAddress, type, cid).send({from: account})
+        .once('receipt', async (receipt) => {
+          await axios.post(
+            "http://localhost:3001/api/raw-material/change-status",
+            { status: "M_T", adrRM: data.rawMaterialAddress }
+          );
+          getRawMaterial();
+          isLoading(false);
+        })
   }
 
+  async function getRawMaterial() {
+    let data = await axios.get("http://localhost:3001/api/raw-material/get-by-status/S_T")
+    setDwa(data.data);
+    console.log(data.data);
+    isLoading(false);
+  }
+  useEffect( () => {
+    getRawMaterial();
+  }, []);
+  return (
+    <TableContainer component={Paper}>
+    <Table className={classes.table} aria-label="customized table">
+      <TableHead>
+        <TableRow>
+          <StyledTableCell>Description</StyledTableCell>
+          <StyledTableCell align="center">Quantity</StyledTableCell>
+          <StyledTableCell align="center">from</StyledTableCell>
+          <StyledTableCell align="center">to</StyledTableCell>
+          <StyledTableCell align="center">Raw Material Package</StyledTableCell>
+          <StyledTableCell align="center">Request</StyledTableCell>
 
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {dwa.map((data) => (
+          <StyledTableRow key={data.rawMaterialAddress}>
+            <StyledTableCell component="th" scope="row">
+            {data.description}
+            </StyledTableCell>
+            <StyledTableCell align="center">{data.quantity}</StyledTableCell>
+            <StyledTableCell align="center">{data.supplierName}</StyledTableCell>
+            <StyledTableCell align="center">{data.manufacturerAddress}</StyledTableCell>
+            <StyledTableCell align="center">{data.rawMaterialAddress}</StyledTableCell>
+           
+            
+            <StyledTableCell align="center"  > <Button
+      variant="outlined" size="small" color="primary" 
+      className={classes.button}
+      onClick={() => transport(data)}
+      endIcon={<Icon>send</Icon>}
+    >
+      transport
+    </Button></StyledTableCell>
+          </StyledTableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+  );
+
+}
+/*
   return (
     <Grid container style={{ backgroundColor: "white", display: "center", alignItems: "center", maxWidth: 400, justify: "center"}}>
         <Container component="main" maxWidth="xs">
@@ -94,3 +169,4 @@ export default function HandlePackage(props) {
     </Grid>
   );
 }
+*/

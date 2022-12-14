@@ -4,21 +4,21 @@ module.exports = {
       host: "127.0.0.1",
       port: 7545,
       network_id: "*",
-      gas: 6721975,
-      from: "0xb5f41aD655747f61B823275759bd425A7AaBD312",
+      gas: 0000000,
+      from: '0xf717d9678549c2Ec1626CdB6F66Ef06B4501A2fC',
     },
   },
-  contracts_directory: "./testing/",
-  contracts_build_directory: "./src/build/",
+  contracts_directory: './testing/',
+  contracts_build_directory: './src/build/',
   compilers: {
     solc: {
       version: "0.6.6",
       settings: {
         optimizer: {
           enabled: true,
-          runs: 100,
-        },
-      },
-    },
-  },
-};
+          runs: 100
+        }
+      }
+    }
+  }
+}

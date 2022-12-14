@@ -3,11 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import morgan from 'morgan';
 import { urlencoded, json } from 'body-parser';
-import cors from 'cors';
 import routers from './routers/index.route';
 import dotenv from 'dotenv'
 import db from './db/init';
-import { disconnect } from 'process';
 
 dotenv.config()
 
@@ -26,7 +24,6 @@ app.use((req, res, next) => {
     next();
 });
 app.use(morgan('combined', { stream: accessLogStream }));
-//app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(json());
 app.use('/api', routers);

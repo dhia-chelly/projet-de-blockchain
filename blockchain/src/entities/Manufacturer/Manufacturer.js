@@ -205,6 +205,8 @@ import ReceiveProduct from './ReceiveProduct';
 import ViewResponses from '../Events/ViewResponses';
 import ViewRequests from '../Events/ViewRequests';
 import RequestProductManufacturer from './RequestProduct';
+import RequestProduct2Manufacturer from './RequestProduct2';
+
 import ViewMedicines from './ViewMedicines';
 import MedicineInfo from './MedicineInfo';
 import ViewTransactions from '../Transactions/ViewTransactions';
@@ -240,12 +242,13 @@ const routes = [
     layout: "/manufacturer"
   },
   {
-    path: "/request-product",
+    path: "/request-product/:id",
     name: "Request Product",
     icon: ViewItem,
     component: RequestProductManufacturer,
     layout: "/manufacturer"
   },
+
   {
     path: "/receive-product",
     name: "Receive Product",

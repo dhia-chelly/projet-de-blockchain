@@ -132,7 +132,7 @@
   "sourceMap": "54:994:0:-:0;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;54:994:0;;;;;;;",
   "deployedSourceMap": "54:994:0:-:0;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;54:994:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;9;2:12;83:60:0;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;;;;;;83:60:0;;;;;;;;:::i;:::-;;;;-1:-1:-1;;;;;83:60:0;;;;;;;;;;;;;;149:42;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;149:42:0;-1:-1:-1;;;;;149:42:0;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;896:149;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;896:149:0;-1:-1:-1;;;;;896:149:0;;:::i;:::-;;;;;;;;;;;;;;;;426:261;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;;;;;;426:261:0;;;;;;;;;;:::i;:::-;;693:197;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;;;;;;693:197:0;;;;;;;;:::i;83:60::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;83:60:0;;-1:-1:-1;83:60:0;;-1:-1:-1;83:60:0:o;149:42::-;;;;;;;;;;;;;;;:::o;896:149::-;-1:-1:-1;;;;;1023:14:0;;984:11;1023:14;;;:4;:14;;;;;;;;1018:20;;;;;;;;1011:27;896:149;-1:-1:-1;;896:149:0:o;426:261::-;532:48;;;-1:-1:-1;;;532:48:0;;-1:-1:-1;;;;;532:48:0;;;;;;;569:10;532:48;;;;;;:26;;;;;;:48;;;;;-1:-1:-1;;532:48:0;;;;;;;;-1:-1:-1;532:26:0;:48;;;2:2:-1;;;;27:1;24;17:12;2:2;532:48:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;-1:-1;;614:10:0;590:23;:35;;;;;;;;;;27:10:-1;;39:1;23:18;;;45:23;;590:50:0;;;;;;;;;;-1:-1:-1;;;;;;590:50:0;-1:-1:-1;;;;;590:50:0;;;;;39:1:-1;-1:-1;667:13:0;;-1:-1:-1;667:13:0;;-1:-1:-1;;;;;650:14:0;;;;;;:4;:14;;;;;;;;:30;;:14;;-1:-1:-1;;650:30:0;;;;;;;;;;;;;;;;;;426:261;;:::o;693:197::-;817:6;806:18;;;;;;;;-1:-1:-1;;;;;789:14:0;;;;;;:4;:14;;;;;;;;:35;;:14;;-1:-1:-1;;789:35:0;;;;;;;;;;;;;;;;;-1:-1:-1;839:44:0;;;-1:-1:-1;;;;;839:44:0;;;;;;;;;;;;864:10;;839:44;;;;;;;;693:197;;:::o",
   "source": "pragma solidity ^0.6.6;\n\nimport './MedicineD_C.sol';\n\ncontract Customer {\n    \n    mapping(address => address[]) public MedicineBatchAtCustomer;\n    mapping(address => salestatus) public sale;\n\n    enum salestatus {\n        notfound,\n        atcustomer,\n        sold,\n        expired,\n        damaged\n    }\n\n    event MedicineStatus(\n        address _address,\n        address indexed Customer,\n        uint status\n    );\n\n    function medicineRecievedAtCustomer(\n        address _address,\n        address cid\n    ) public {\n        MedicineD_C(cid).receiveDC(_address, msg.sender);\n        MedicineBatchAtCustomer[msg.sender].push(_address);\n        sale[_address] = salestatus(1);\n    }\n\n    function updateSaleStatus(\n        address _address,\n        uint Status\n    ) public {\n        sale[_address] = salestatus(Status);\n        emit MedicineStatus(_address, msg.sender, Status);\n    }\n\n    function salesInfo(\n        address _address\n    ) public\n    view\n    returns(\n        uint Status\n    ){\n        return uint(sale[_address]);\n    }\n\n}",
-  "sourcePath": "C:\\Users\\user\\Downloads\\louay\\pharma-Chain-master-2\\blockchain\\testing\\Customer.sol",
+  "sourcePath": "E:\\chelly_dhia\\desktop\\project\\blockchain\\testing\\Customer.sol",
   "ast": {
     "absolutePath": "project:/testing/Customer.sol",
     "exportedSymbols": {
@@ -2788,8 +2788,8 @@
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.7",
-  "updatedAt": "2022-12-08T20:06:55.203Z",
+  "schemaVersion": "3.4.11",
+  "updatedAt": "2022-12-14T08:10:21.401Z",
   "devdoc": {
     "methods": {}
   },

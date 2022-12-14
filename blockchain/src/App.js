@@ -7,67 +7,38 @@ import SupplyChain from "./build/SupplyChain.json";
 
 // Owner imports
 import Owner from "./entities/Owner/Owner";
-import AddNewUser from "./entities/Owner/AddNewUser";
-import ViewUser from "./entities/Owner/ViewUser";
-import Try from "./entities/Owner/Try";
 
 // Supplier imports
 import Supplier from "./entities/Supplier/Supplier";
-import AddRawMaterial from "./entities/Supplier/AddRawMaterial";
-import ViewRawMaterials from "./entities/Supplier/ViewRawMaterials";
-import RawMaterialInfo from "./entities/Supplier/RawMaterialInfo";
 
 // Transporter imports
 import Transporter from "./entities/Transporter/Transporter";
-import HandlePackage from "./entities/Transporter/HandlePackage";
 
 // Manufacturer imports
 import Manufacturer from "./entities/Manufacturer/Manufacturer";
-import RequestProductManufacturer from "./entities/Manufacturer/RequestProduct";
-import ReceiveProduct from "./entities/Manufacturer/ReceiveProduct";
-import CreateMedicine from "./entities/Manufacturer/CreateMedicine";
-import ViewMedicines from "./entities/Manufacturer/ViewMedicines";
-import MedicineInfo from "./entities/Manufacturer/MedicineInfo";
+
 
 // Wholesaler imports
 import Wholesaler from "./entities/Wholesaler/Wholesaler";
-import ViewReceivedMedicines from "./entities/Wholesaler/ViewReceivedMedicine";
-import RequestProductWholesaler from "./entities/Wholesaler/RequestProduct";
-import TransferMedicine from "./entities/Wholesaler/TransferMedicine";
-import WholesalerReceiveProduct from "./entities/Wholesaler/ReceiveProduct";
-import WholesalerMedicineInfo from "./entities/Wholesaler/WholesalerMedicineInfo";
 
 // Distributor imports
 import Distributor from "./entities/Distributor/Distributor";
-import RequestProductDistributor from "./entities/Distributor/RequestProduct";
-import DistributorReceiveProduct from "./entities/Distributor/DistributorReceiveProduct";
-import DistributorViewReceivedMedicines from "./entities/Distributor/DistributorViewReceivedMedicines";
-import DistributorMedicineInfo from "./entities/Distributor/DistributorMedicineInfo";
 
 // Customer imports
 import Customer from "./entities/Customer/Customer";
-import RequestProductCustomer from "./entities/Customer/RequestProduct";
-import CustomerReceiveProduct from "./entities/Customer/CustomerReceiveProduct";
-import CustomerViewReceivedMedicines from "./entities/Customer/CustomerViewReceivedMedicines";
-import CustomerMedicineInfo from "./entities/Customer/CustomerMedicineInfo";
 
-// Transaction imports
-import ViewTransations from "./entities/Transactions/ViewTransactions";
 
-// Event imports
-import ViewRequests from "./entities/Events/ViewRequests";
-import ViewResponses from "./entities/Events/ViewResponses";
 
 // Utils
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import SignIn from "./components/login/SignIn";
-import SignUp from "./components/login/SignUp";
+
 import Landing from "./components/home/Landing";
 import Loader from "./components/Loader";
 import NotFound from "./components/NotFound";
 
 import Admin from "./main_dashboard/layouts/Admin";
 import RTL from "./main_dashboard/layouts/RTL";
+import background from "./main_dashboard/assets/img/bg.png";
 
 import "./main_dashboard/assets/css/material-dashboard-react.css?v=1.9.0";
 
@@ -134,12 +105,11 @@ class App extends Component {
   render() {
     if (this.state.loading === false) {
       return (
+        <div style={{ backgroundImage: `url(${background})` }}>
+         
         <Router>
           <Switch>
             <Route exact path="/" component={Landing} />
-            <Route exact path="/signup" component={SignUp} />
-            <Route path="/signin" component={SignIn} />
-
             <Route
               path="/owner"
               render={(props) => (
@@ -261,6 +231,7 @@ class App extends Component {
             <Route path="/rtl" component={RTL} />
           </Switch>
         </Router>
+        </div>
       );
     } else {
       return <Loader></Loader>;

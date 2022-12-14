@@ -5,40 +5,27 @@ import Button from "@material-ui/core/Button";
 import Loader from "../../components/Loader";
 import RawMaterial from "../../build/RawMaterial.json";
 import Transactions from "../../build/Transactions.json";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import AllInboxIcon from '@material-ui/icons/AllInbox';
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
+    "& > *": {
+      margin: theme.spacing(1),
+      width: "25ch",
+    },
   },
 }));
 
 export default function ReceiveProduct(props) {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
-  const [dwa, setDwa] = useState([]);
-
   const [account] = useState(props.account);
   const [web3, setWeb3] = useState(props.web3);
-  let [address, setAddress] = useState("");
+  const [address, setAddress] = useState("");
   const [supplyChain] = useState(props.supplyChain);
   const [loading, isLoading] = useState(false);
+
+  const handleInputChange = (e) => {
+    setAddress(e.target.value);
+  };
 
   async function verifySignature(sellerAddress, signature) {
     let v = "0x" + signature.slice(130, 132).toString();
@@ -52,10 +39,7 @@ export default function ReceiveProduct(props) {
     return verificationOutput;
   }
 
-  async function recive(adr) {
-    address = adr 
-    console.log(adr)
-    console.log(address)
+  async function handleSubmit() {
     let rawMaterial = new web3.eth.Contract(RawMaterial.abi, address);
     let data = await rawMaterial.methods
       .getSuppliedRawMaterials()
@@ -79,11 +63,6 @@ export default function ReceiveProduct(props) {
         .manufacturerReceivedPackage(address, account, supplier, signature)
         .send({ from: account })
         .once("receipt", async (receipt) => {
-          await axios.post(
-            "http://localhost:3001/api/raw-material/change-status",
-            { status: "M", adrRM: adr }
-          );
-          getRawMaterial();
           let txnContractAddress = data[6];
           let transporterAddress = data[4];
           let txnHash = receipt.transactionHash;
@@ -108,17 +87,6 @@ export default function ReceiveProduct(props) {
         });
     }
   }
-  async function getRawMaterial() {
-    let data = await axios.get(
-      "http://localhost:3001/api/raw-material/get-by-status/M_T"
-    );
-    setDwa(data.data);
-    console.log(data.data);
-    isLoading(false);
-  }
-  useEffect(() => {
-    getRawMaterial();
-  }, []);
 
   if (loading) {
     return (
@@ -131,31 +99,17 @@ export default function ReceiveProduct(props) {
   }
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        {dwa.map((data) => (
-          <Grid item xs={3}>
-            <Card>
-              <CardContent  className={classes.paper}>
-                <Typography
-                  className={classes.title}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  From : {data.supplierName}
-                </Typography>
-               < AllInboxIcon style={{ fontSize: 75 }}  color="primary"  />
-                <Typography className={classes.pos} color="black">
-                {data.description}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small"  onClick={() => recive(data.rawMaterialAddress)} >Recive</Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+    <form className={classes.root} noValidate autoComplete="off">
+      <TextField
+        id="address"
+        label="Package Address"
+        variant="outlined"
+        onChange={handleInputChange}
+      />
+      <br></br>
+      <Button variant="contained" color="primary" onClick={handleSubmit}>
+        Submit
+      </Button>
+    </form>
   );
 }
